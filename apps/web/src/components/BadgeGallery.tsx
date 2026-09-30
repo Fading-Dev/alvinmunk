@@ -11,7 +11,6 @@ import { FOCUS_MODE } from '@/lib/focus';
 import { useTranslations, type TFn } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { shortAddr } from '@alvinmunk/shared';
-import { ChevronDown } from 'lucide-react';
 
 type State = { status: 'loading' } | { status: 'error' } | { status: 'ready'; badges: Badge[] };
 
@@ -24,9 +23,9 @@ type State = { status: 'loading' } | { status: 'error' } | { status: 'ready'; ba
 export function BadgeGallery({ address, className }: { address: string; className?: string }) {
   const t = useTranslations();
   const headingId = useId();
+  const [expanded, setExpanded] = useState(false);
   const [state, setState] = useState<State>({ status: 'loading' });
   const [attempt, setAttempt] = useState(0);
-  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     let alive = true;
@@ -47,6 +46,7 @@ export function BadgeGallery({ address, className }: { address: string; classNam
         : '…';
 
   const earnedCount = state.status === 'ready' ? state.badges.filter((b) => b.earned).length : 0;
+
   return (
     <section aria-labelledby={headingId}>
       <Frame label={t('badges.frame')} index={index} accent="tertiary" tape="br" className={className}>
@@ -63,30 +63,6 @@ export function BadgeGallery({ address, className }: { address: string; classNam
             >
               {t('badges.retry')}
             </button>
-          </div>
-        ) : state.status === 'ready' ? (
-          <div className="sm:hidden">
-            <button
-              type="button"
-              onClick={() => setExpanded((v) => !v)}
-              aria-expanded={expanded}
-              className="flex w-full items-center justify-between gap-3 p-4 text-left"
-            >
-              <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
-                {earnedCount}/{state.badges.length} {t('badges.heading')}
-              </span>
-              <ChevronDown
-                className={cn('size-4 shrink-0 text-muted-foreground transition-transform', expanded && 'rotate-180')}
-                aria-hidden
-              />
-            </button>
-            {expanded && (
-              <ul className="grid grid-cols-3 gap-2 px-4 pb-4" data-testid="badge-gallery">
-                {state.badges.map((b) => (
-                  <BadgeTile key={b.id} badge={b} />
-                ))}
-              </ul>
-            )}
           </div>
         ) : (
           <ul
@@ -105,7 +81,9 @@ export function BadgeGallery({ address, className }: { address: string; classNam
                 ))}
               </>
             ) : (
-              null
+              state.badges.map((b, i) => (
+                <BadgeTile key={b.id} badge={b} hiddenOnMobile={!expanded && i >= 3} />
+              ))
             )}
           </ul>
         )}
@@ -114,11 +92,18 @@ export function BadgeGallery({ address, className }: { address: string; classNam
   );
 }
 
-function BadgeTile({ badge }: { badge: Badge }) {
+function BadgeTile({ badge, hiddenOnMobile }: { badge: Badge; hiddenOnMobile?: boolean }) {
   const t = useTranslations();
   const key = `badges.${badge.id}`;
   return (
-    <li className="flex flex-col items-center gap-1.5 p-2 text-center" data-badge={badge.id} data-earned={badge.earned}>
+    <li
+      className={cn(
+        'flex flex-col items-center gap-1.5 p-2 text-center',
+        hiddenOnMobile && 'hidden sm:flex',
+      )}
+      data-badge={badge.id}
+      data-earned={badge.earned}
+    >
       <div className="flex h-12 items-center justify-center">
         {/* Decorative: the badge name below is the accessible label. */}
         <Sticker name={badge.sticker} size={48} className={cn(!badge.earned && 'opacity-40 grayscale')} />

@@ -68,39 +68,35 @@ export default function AppHome() {
 
   const shortcuts = SHORTCUTS.filter((s) => !s.cashable || !FOCUS_MODE);
 
-  const shortcutsSection = (
-    <section>
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-        {t('appHome.whatNow')}
-      </h2>
-      <div className={`grid gap-3 ${shortcuts.length > 1 ? 'sm:grid-cols-3' : ''}`}>
-        {shortcuts.map((s) => {
-          const Icon = s.icon;
-          return (
-            <Link
-              key={s.href}
-              href={s.href}
-              className="group glass spotlight flex flex-col gap-3 rounded-2xl p-5 transition-transform hover:-translate-y-0.5"
-            >
-              <Icon className={`size-6 ${s.tint}`} />
-              <div>
-                <p className="flex items-center gap-1 font-semibold">
-                  {t(s.titleKey)}
-                  <ArrowRight className="size-4 -translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
-                </p>
-                <p className="mt-1 text-sm text-muted-foreground text-balance">{t(s.bodyKey)}</p>
-              </div>
-            </Link>
-          );
-        })}
-      </div>
-    </section>
-  );
-
   return (
     <div className="grid gap-6">
-      {/* Quick actions — above the hero on mobile so the first CTA is in the first viewport */}
-      <div className="sm:hidden">{shortcutsSection}</div>
+      {/* Quick actions — the three focused routes, one job each */}
+      <section>
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+          {t('appHome.whatNow')}
+        </h2>
+        <div className={`grid gap-3 ${shortcuts.length > 1 ? 'sm:grid-cols-3' : ''}`}>
+          {shortcuts.map((s) => {
+            const Icon = s.icon;
+            return (
+              <Link
+                key={s.href}
+                href={s.href}
+                className="group glass spotlight flex flex-col gap-3 rounded-2xl p-5 transition-transform hover:-translate-y-0.5"
+              >
+                <Icon className={`size-6 ${s.tint}`} />
+                <div>
+                  <p className="flex items-center gap-1 font-semibold">
+                    {t(s.titleKey)}
+                    <ArrowRight className="size-4 -translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
+                  </p>
+                  <p className="mt-1 text-sm text-muted-foreground text-balance">{t(s.bodyKey)}</p>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
 
       {/* HERO — your living 3D constellation */}
       <ConstellationHero3D address={profile.address} handle={profile.handle} />
@@ -114,9 +110,6 @@ export default function AppHome() {
 
       {/* Voucher bonuses still waiting on the people you vouched to verify — self-hides when none */}
       <OwedBonuses />
-
-      {/* Quick actions — the three focused routes, one job each (desktop position) */}
-      <div className="hidden sm:block">{shortcutsSection}</div>
 
       {/* Recent activity preview */}
       <section>
