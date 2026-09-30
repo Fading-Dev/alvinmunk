@@ -70,8 +70,22 @@ export default function AppHome() {
 
   return (
     <div className="grid gap-6">
-      {/* Quick actions — the three focused routes, one job each */}
-      <section>
+      {/* HERO — your living 3D constellation */}
+      <ConstellationHero3D address={profile.address} handle={profile.handle} />
+
+      {/* First-run + invite nudges (self-hiding) */}
+      <FirstStarNudge />
+      <InviteNudge />
+
+      {/* Time-sensitive: unclaimed half-cards you minted (stake at risk) — self-hides when empty */}
+      <PendingHalfCards />
+
+      {/* Voucher bonuses still waiting on the people you vouched to verify — self-hides when none */}
+      <OwedBonuses />
+
+      {/* Quick actions — the three focused routes, one job each. On phones they lead the
+          page, above the hero (#474); from sm up they keep their place below the nudges. */}
+      <section className="order-first sm:order-none">
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
           {t('appHome.whatNow')}
         </h2>
@@ -97,19 +111,6 @@ export default function AppHome() {
           })}
         </div>
       </section>
-
-      {/* HERO — your living 3D constellation */}
-      <ConstellationHero3D address={profile.address} handle={profile.handle} />
-
-      {/* First-run + invite nudges (self-hiding) */}
-      <FirstStarNudge />
-      <InviteNudge />
-
-      {/* Time-sensitive: unclaimed half-cards you minted (stake at risk) — self-hides when empty */}
-      <PendingHalfCards />
-
-      {/* Voucher bonuses still waiting on the people you vouched to verify — self-hides when none */}
-      <OwedBonuses />
 
       {/* Recent activity preview */}
       <section>
