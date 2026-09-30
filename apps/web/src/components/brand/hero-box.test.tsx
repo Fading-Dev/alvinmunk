@@ -89,7 +89,7 @@ describe('hero box sizing', () => {
     vi.unstubAllGlobals();
   });
 
-  it('keeps the hero at its real size from sm up, and shorter on a phone (#474)', () => {
+  it('keeps the hero at its real size from sm up, and shorter on a phone', () => {
     expect(HERO_BOX).toBe('h-[42vh] max-h-[620px] min-h-[280px] sm:h-[64vh] sm:min-h-[440px]');
   });
 
